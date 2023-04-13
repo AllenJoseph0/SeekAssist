@@ -59,47 +59,49 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.green,
       ),
       body: Container(
-          child: Column(
-              children:[
-                Container(
-                    height:300,
-                    width:400,
-                    child: controller == null?
-                    Center(child:Text("Loading Camera...")):
-                    !controller!.value.isInitialized?
-                    Center(
-                      child: CircularProgressIndicator(),
-                    ):
-                    CameraPreview(controller!)
-                ),
+          child: SingleChildScrollView(
+            child: Column(
+                children:[
+                  Container(
+                      height:300,
+                      width:400,
+                      child: controller == null?
+                      Center(child:Text("Loading Camera...")):
+                      !controller!.value.isInitialized?
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ):
+                      CameraPreview(controller!)
+                  ),
 
-                ElevatedButton.icon( //image capture button
-                  onPressed: () async{
-                    try {
-                      if(controller != null){ //check if contrller is not null
-                        if(controller!.value.isInitialized){ //check if controller is initialized
-                          image = await controller!.takePicture(); //capture image
-                          setState(() {
-                            //update UI
-                          });
+                  ElevatedButton.icon( //image capture button
+                    onPressed: () async{
+                      try {
+                        if(controller != null){ //check if contrller is not null
+                          if(controller!.value.isInitialized){ //check if controller is initialized
+                            image = await controller!.takePicture(); //capture image
+                            setState(() {
+                              //update UI
+                            });
+                          }
                         }
+                      } catch (e) {
+                        print(e); //show error
                       }
-                    } catch (e) {
-                      print(e); //show error
-                    }
-                  },
-                  icon: Icon(Icons.camera),
-                  label: Text("Capture"),
-                ),
+                    },
+                    icon: Icon(Icons.camera),
+                    label: Text("Capture"),
+                  ),
 
-                Container( //show captured image
-                  padding: EdgeInsets.all(30),
-                  child: image == null?
-                  Text("No image captured"):
-                  Image.file(File(image!.path), height: 300,),
-                  //display captured image
-                )
-              ]
+                  Container( //show captured image
+                    padding: EdgeInsets.all(30),
+                    child: image == null?
+                    Text("No image captured"):
+                    Image.file(File(image!.path), height: 300,),
+                    //display captured image
+                  )
+                ]
+            ),
           )
       ),
 
