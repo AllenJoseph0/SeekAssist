@@ -4,6 +4,7 @@ import 'package:SeekAssist/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'Home.dart';
 
@@ -19,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-        const Duration(seconds: 10),
+        const Duration(seconds: 04),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home())));
   }
@@ -36,11 +37,15 @@ class _SplashScreenState extends State<SplashScreen> {
               image: AssetImage(
                 'assets/images/logopik.png',
               ),
+              height: 50,
+              width: 50,
             ),
-            Text(
-              'SeekAssist',
-              textScaleFactor: 2,
-            ),
+            Text('SeekAssist',
+                textScaleFactor: 2,
+                style: GoogleFonts.openSans(
+                  textStyle: TextStyle(color: Colors.greenAccent),
+                  fontWeight: FontWeight.w900,
+                ))
           ],
         ),
       ),
