@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-        const Duration(seconds: 3),
+        const Duration(seconds: 10),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home())));
   }
@@ -27,20 +27,22 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image(
-            image: AssetImage(
-              'assets/images/logopik.png',
+      body: SizedBox.expand(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image(
+              image: AssetImage(
+                'assets/images/logopik.png',
+              ),
             ),
-          ),
-          Text(
-            'SeekAssist',
-            textScaleFactor: 2,
-          ),
-        ],
+            Text(
+              'SeekAssist',
+              textScaleFactor: 2,
+            ),
+          ],
+        ),
       ),
     );
   }
