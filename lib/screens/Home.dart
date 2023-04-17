@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import './main_drawer.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -39,6 +39,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer:MainDrawer(),
       appBar: AppBar(
         title: Text("SeekAssist"),
         backgroundColor: Colors.green,
