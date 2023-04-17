@@ -11,7 +11,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<CameraDescription>? cameras; //list out the camera available
   CameraController? controller; //controller for camera
-  XFile? image; //for captured image
+  XFile? image;
+
+  get body => null; //for captured image
 
   @override
   void initState() {
@@ -57,12 +59,16 @@ class _HomeState extends State<Home> {
                           child: CircularProgressIndicator(),
                         )
                       : CameraPreview(controller!)),
-          ElevatedButton.icon(
+          Container(
+                height: 100,
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(20),
+          child:ElevatedButton.icon(
             //image capture button
             onPressed: () async {
               try {
                 if (controller != null) {
-                  //check if contrller is not null
+                  //check if controller is not null
                   if (controller!.value.isInitialized) {
                     //check if controller is initialized
                     image = await controller!.takePicture(); //capture image
@@ -75,8 +81,25 @@ class _HomeState extends State<Home> {
                 print(e); //show error
               }
             },
+
+
             icon: Icon(Icons.camera),
             label: Text("Capture"),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green //elevated btton background color
+            ),
+          ),
+            ),
+          ElevatedButton.icon(
+            onPressed: () {},
+            icon: Icon( // <-- Icon
+              Icons.photo_library,
+
+            ),
+            label: Text('Upload image'),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green //elevated btton background color
+            ),// <-- Text
           ),
           Container(
             //show captured image
