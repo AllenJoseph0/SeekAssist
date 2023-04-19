@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //       fit: BoxFit.cover,
     //     )));
     Timer(
-        const Duration(seconds: 10),
+        const Duration(seconds: 04),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home())));
   }
