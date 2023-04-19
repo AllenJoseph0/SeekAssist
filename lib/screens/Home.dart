@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import './main_drawer.dart';
+import 'package:image_picker/image_picker.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -11,7 +13,27 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<CameraDescription>? cameras; //list out the camera available
   CameraController? controller; //controller for camera
-  XFile? image; //for captured image
+  XFile? image;
+  File? _image ;
+
+
+  final picker = ImagePicker();
+
+  Future getImager() async{
+    final pickedImage = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if(pickedImage  !=null ){
+        _image = File(pickedImage.path);
+      }else{
+        print("No Image Selected");
+      }
+
+    });
+
+  }
+
+  get body => null; //for captured image
 
   @override
   void initState() {
@@ -57,12 +79,17 @@ class _HomeState extends State<Home> {
                           child: CircularProgressIndicator(),
                         )
                       : CameraPreview(controller!)),
-          ElevatedButton.icon(
+
+          Container(
+                height: 100,
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(20),
+          child:ElevatedButton.icon(
             //image capture button
             onPressed: () async {
               try {
                 if (controller != null) {
-                  //check if contrller is not null
+                  //check if controller is not null
                   if (controller!.value.isInitialized) {
                     //check if controller is initialized
                     image = await controller!.takePicture(); //capture image
@@ -75,8 +102,29 @@ class _HomeState extends State<Home> {
                 print(e); //show error
               }
             },
+
+
             icon: Icon(Icons.camera),
             label: Text("Capture"),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green //elevated button background color
+            ),
+          ),
+            ),
+          Container(
+            child: _image == null
+                ? Text('No Image Selected')
+                : Image.file(_image!),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              getImager();
+            },
+            icon: Icon( Icons.photo_library,),
+            label: Text('Upload image'),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green //elevated button background color
+            ),// <-- Text
           ),
           Container(
             //show captured image
