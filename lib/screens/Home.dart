@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import './main_drawer.dart';
+import 'package:image_picker/image_picker.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -12,6 +14,24 @@ class _HomeState extends State<Home> {
   List<CameraDescription>? cameras; //list out the camera available
   CameraController? controller; //controller for camera
   XFile? image;
+  File? _image ;
+
+
+  final picker = ImagePicker();
+
+  Future getImager() async{
+    final pickedImage = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if(pickedImage  !=null ){
+        _image = File(pickedImage.path);
+      }else{
+        print("No Image Selected");
+      }
+
+    });
+
+  }
 
   get body => null; //for captured image
 
@@ -59,6 +79,7 @@ class _HomeState extends State<Home> {
                           child: CircularProgressIndicator(),
                         )
                       : CameraPreview(controller!)),
+
           Container(
                 height: 100,
                 alignment: Alignment.center,
@@ -86,19 +107,23 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.camera),
             label: Text("Capture"),
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green //elevated btton background color
+                backgroundColor: Colors.green //elevated button background color
             ),
           ),
             ),
+          Container(
+            child: _image == null
+                ? Text('No Image Selected')
+                : Image.file(_image!),
+          ),
           ElevatedButton.icon(
-            onPressed: () {},
-            icon: Icon( // <-- Icon
-              Icons.photo_library,
-
-            ),
+            onPressed: () {
+              getImager();
+            },
+            icon: Icon( Icons.photo_library,),
             label: Text('Upload image'),
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green //elevated btton background color
+                backgroundColor: Colors.green //elevated button background color
             ),// <-- Text
           ),
           Container(
