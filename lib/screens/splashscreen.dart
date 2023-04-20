@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Text('SeekAssist',
                   textScaleFactor: 2,
                   style: GoogleFonts.openSans(
-                    textStyle: TextStyle(color: Colors.greenAccent),
+                    textStyle: TextStyle(color: Colors.white),
                     fontWeight: FontWeight.w500,
                   ))
             ],
