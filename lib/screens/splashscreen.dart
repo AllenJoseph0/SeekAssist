@@ -19,8 +19,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    // Container(
+    //     height: (MediaQuery.of(context).size.height),
+    //     width: (MediaQuery.of(context).size.width),
+    //     decoration: BoxDecoration(
+    //         image: DecorationImage(
+    //       image: AssetImage('assets\images\bg.png'),
+    //       fit: BoxFit.cover,
+    //     )));
     Timer(
-        const Duration(seconds: 03),
+        const Duration(seconds: 04),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home())));
   }
@@ -28,26 +36,34 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFB4AEA9),
       body: SizedBox.expand(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image(
-              image: AssetImage(
-                'assets/images/logopik.png',
+        child: Container(
+          height: (MediaQuery.of(context).size.height),
+          width: (MediaQuery.of(context).size.width),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+            image: AssetImage('assets/images/bg.png'),
+            fit: BoxFit.cover,
+          )),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image(
+                image: AssetImage(
+                  'assets/images/logopik.png',
+                ),
+                height: 50,
+                width: 50,
               ),
-              height: 50,
-              width: 50,
-            ),
-            Text('SeekAssist',
-                textScaleFactor: 2,
-                style: GoogleFonts.openSans(
-                  textStyle: TextStyle(color: Colors.greenAccent),
-                  fontWeight: FontWeight.w900,
-                ))
-          ],
+              Text('SeekAssist',
+                  textScaleFactor: 2,
+                  style: GoogleFonts.openSans(
+                    textStyle: TextStyle(color: Colors.white),
+                    fontWeight: FontWeight.w500,
+                  ))
+            ],
+          ),
         ),
       ),
     );
