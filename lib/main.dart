@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:SeekAssist/screens/splashscreen.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-// import 'package:alan_voice/alan_voice.dart';
+import 'package:alan_voice/alan_voice.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 Future<void> main() async {
   runApp(MyApp());
