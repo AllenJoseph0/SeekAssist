@@ -1,10 +1,9 @@
 import 'package:SeekAssist/screens/help_screen.dart';
-import 'package:SeekAssist/screens/settings_screen.dart';
-import 'package:SeekAssist/screens/share_screen.dart';
+// import 'package:SeekAssist/screens/settings_screen.dart';
+// import 'package:SeekAssist/screens/share_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainDrawer extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -15,14 +14,14 @@ class MainDrawer extends StatelessWidget {
           const DrawerHeader(
             decoration: BoxDecoration(
               color: Colors.green,
-
             ),
             child: Text('SeekAssist'),
           ),
           ListTile(
             title: const Text('Help'),
             onTap: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context) => HelpScreen() ));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HelpScreen()));
 
               // Update the state of the app.
               // ...
@@ -31,8 +30,7 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: const Text('Settings'),
             onTap: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context) => SettingsScreen() ));
-
+              // Navigator.push(context,MaterialPageRoute(builder: (context) => SettingsScreen() ));
 
               // Update the state of the app.
               // ...
@@ -41,7 +39,7 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: const Text('Share'),
             onTap: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context) => ShareScreen() ));
+              // Navigator.push(context,MaterialPageRoute(builder: (context) => ShareScreen() ));
 
               // Update the state of the app.
               // ...
@@ -51,8 +49,6 @@ class MainDrawer extends StatelessWidget {
             title: const Text('Feedback'),
             onTap: () {
               Navigator.pop(context);
-
-
 
               // Update the state of the app.
               // ...
