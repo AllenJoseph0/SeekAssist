@@ -184,7 +184,7 @@ class _HomeState extends State<Home> {
               ),
               prediction != null
                   ? Text(
-                "Prediction: $prediction",
+                "Caption: $prediction",
                 style: TextStyle(fontSize: 18),
               )
                   : Container(),
