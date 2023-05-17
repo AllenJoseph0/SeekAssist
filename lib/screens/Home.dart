@@ -185,9 +185,7 @@ class _HomeState extends State<Home> {
         ]),
       )),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        // child: Icon(_isListening ? Icons.mic : Icons.mic_none),
-      ),
+          onPressed: () async {}, child: Icon(Icons.mic, size: 45)),
     );
   }
 }
