@@ -97,30 +97,65 @@ class _HomeState extends State<Home> {
       print('Error: $e');
     }
   }*/
-  Future<void> predictImage() async{
-    final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
-    final endpoint = 'https://abhii.cognitiveservices.azure.com/';
-    final imagePath = '_image';
+  Future<void> predictImagecapture(File imagefile) async {
+    if (imagefile != null) {
+      final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
+      final endpoint = 'https://abhii.cognitiveservices.azure.com/';
 
-    final uri = Uri.parse('$endpoint/vision/v3.2/analyze?visualFeatures=Description');
-    final headers = {
-      'Ocp-Apim-Subscription-Key': subscriptionKey,
-      'Content-Type': 'application/octet-stream',
-    };
+      final uri = Uri.parse(
+          '$endpoint/vision/v3.2/analyze?visualFeatures=Description');
+      final headers = {
+        'Ocp-Apim-Subscription-Key': subscriptionKey,
+        'Content-Type': 'application/octet-stream',
+      };
 
-    final imageBytes = File(imagePath).readAsBytesSync();
+      final imageBytes = imagefile.readAsBytesSync();
 
-    final response = await http.post(uri, headers: headers, body: imageBytes);
-    final responseBody = jsonDecode(response.body);
+      final response = await http.post(uri, headers: headers, body: imageBytes);
+      final responseBody = jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-      final captions = responseBody['description']['captions'];
-      for (final caption in captions) {
-        print(caption['text']);
-        prediction=caption;
+      if (response.statusCode == 200) {
+        final captions = responseBody['description']['captions'];
+        for (final caption in captions) {
+          print(caption['text']);
+          setState(() {
+            prediction = caption['text'];
+          });
+        }
       }
-    } else {
-      print('Error: ${response.statusCode} ${responseBody['error']['message']}');}
+    }
+  }
+  Future<void> predictImage() async{
+    if(_image!=null) {
+      final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
+      final endpoint = 'https://abhii.cognitiveservices.azure.com/';
+
+      final uri = Uri.parse(
+          '$endpoint/vision/v3.2/analyze?visualFeatures=Description');
+      final headers = {
+        'Ocp-Apim-Subscription-Key': subscriptionKey,
+        'Content-Type': 'application/octet-stream',
+      };
+
+      final imageBytes = _image!.readAsBytesSync();
+
+      final response = await http.post(uri, headers: headers, body: imageBytes);
+      final responseBody = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final captions = responseBody['description']['captions'];
+        for (final caption in captions) {
+          print(caption['text']);
+          setState(() {
+            prediction = caption['text'];
+          });
+         // Text("Caption:$prediction");
+        }
+      } else {
+        print('Error: ${response
+            .statusCode} ${responseBody['error']['message']}');
+      }
+    }
   }
 
 
@@ -162,6 +197,11 @@ class _HomeState extends State<Home> {
                           setState(() {
                             //update UI
                           });
+                          if (image != null) {
+                            await predictImagecapture(File(image!.path));
+                          } else {
+                            print('No image captured');
+                          }
                         }
                       }
                     } catch (e) {
@@ -208,12 +248,11 @@ class _HomeState extends State<Home> {
                 onPressed: predictImage,
                 child: Text('Predict Image'),
               ),
-              prediction != null
-                  ? Text(
-                "Caption: $prediction",
-                style: TextStyle(fontSize: 18),
-              )
-                  : Container(),
+             prediction != null
+              ? Text(
+               "Caption: $prediction",
+               style: TextStyle(fontSize: 18),
+              ) : Container(),
             ]),
           )),
     );
