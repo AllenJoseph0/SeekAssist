@@ -5,13 +5,45 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import './main_drawer.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:alan_voice/alan_voice.dart';
+
+// String sdkKey =
+//     " 08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage";
+// @override
+// // void initState() {
+// //   super.initState();
+// //   initAlan();
+// // }
+
+// initAlan() {
+//   AlanVoice.addButton(
+//       "08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage");
+// }
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
+// void initState() {
+//   super.initState();
+//   initAlan();
+// }
+
 class _HomeState extends State<Home> {
+  // _HomeState() {
+  //   /// Init Alan Button with project key from Alan AI Studio
+  //   AlanVoice.addButton(
+  //       "08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage",
+  //       buttonAlign: AlanVoice.BUTTON_ALIGN_LEFT);
+
+  //   /// Handle commands from Alan AI Studio
+  //   AlanVoice.onCommand.add((command) {
+  //     debugPrint("got new command ${command.toString()}");
+  //   });
+  // }
+
   List<CameraDescription>? cameras; //list out the camera available
   CameraController? controller; //controller for camera
   XFile? image;
@@ -33,10 +65,26 @@ class _HomeState extends State<Home> {
 
   get body => null; //for captured image
 
+//   // @override
+//   String sdkKey =
+//       " 08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage";
+// // @override
+// // // void initState() {
+// // //   super.initState();
+// // //   initAlan();
+// // // }
+
+//   initAlan() {
+//     AlanVoice.addButton(
+//         "08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage");
+//   }
+
   @override
   void initState() {
     loadCamera();
     super.initState();
+    super.initState();
+    // initAlan();
   }
 
   loadCamera() async {
