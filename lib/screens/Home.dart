@@ -106,7 +106,7 @@ class _HomeState extends State<Home> {
 
   String? prediction;
 
-  Future<String> getPrediction(File imageFile) async {
+ /* Future<String> getPrediction(File imageFile) async {
     try {
       final url = Uri.parse('https://api.replicate.com/v1/predictions');
       final request = http.MultipartRequest('POST', url);
@@ -138,7 +138,33 @@ class _HomeState extends State<Home> {
     } catch (e) {
       print('Error: $e');
     }
+  }*/
+  Future<void> predictImage() async{
+    final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
+    final endpoint = 'https://abhii.cognitiveservices.azure.com/';
+    final imagePath = '_image';
+
+    final uri = Uri.parse('$endpoint/vision/v3.2/analyze?visualFeatures=Description');
+    final headers = {
+      'Ocp-Apim-Subscription-Key': subscriptionKey,
+      'Content-Type': 'application/octet-stream',
+    };
+
+    final imageBytes = File(imagePath).readAsBytesSync();
+
+    final response = await http.post(uri, headers: headers, body: imageBytes);
+    final responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      final captions = responseBody['description']['captions'];
+      for (final caption in captions) {
+        print(caption['text']);
+        prediction=caption;
+      }
+    } else {
+      print('Error: ${response.statusCode} ${responseBody['error']['message']}');}
   }
+
 
   @override
   Widget build(BuildContext context) {
