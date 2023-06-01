@@ -94,7 +94,7 @@ class _HomeState extends State<Home> {
   Future<void> predictImage() async{
     final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
     final endpoint = 'https://abhii.cognitiveservices.azure.com/';
-    final imagePath = '_image';
+    final imagePath = _image;
 
     final uri = Uri.parse('$endpoint/vision/v3.2/analyze?visualFeatures=Description');
     final headers = {
@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
       'Content-Type': 'application/octet-stream',
     };
 
-    final imageBytes = File(imagePath).readAsBytesSync();
+    final imageBytes = _image!.readAsBytesSync();
 
     final response = await http.post(uri, headers: headers, body: imageBytes);
     final responseBody = jsonDecode(response.body);
@@ -111,7 +111,10 @@ class _HomeState extends State<Home> {
       final captions = responseBody['description']['captions'];
       for (final caption in captions) {
         print(caption['text']);
-        prediction=caption;
+        setState(() {
+          prediction = caption['text'];
+        });
+        
       }
     } else {
       print('Error: ${response.statusCode} ${responseBody['error']['message']}');}
@@ -210,8 +213,8 @@ class _HomeState extends State<Home> {
               : Container(),
         ]),
       )),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {}, child: Icon(Icons.mic, size: 45)),
+     // */ floatingActionButton: FloatingActionButton(
+     //      onPressed: () async {}, child: Icon(Icons.mic, size: 45)),
     );
   }
 }
