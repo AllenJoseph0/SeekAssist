@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import './main_drawer.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -16,23 +15,20 @@ class _HomeState extends State<Home> {
   List<CameraDescription>? cameras; //list out the camera available
   CameraController? controller; //controller for camera
   XFile? image;
-  File? _image ;
-
+  File? _image;
 
   final picker = ImagePicker();
 
-  Future getImager() async{
+  Future getImager() async {
     final pickedImage = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
-      if(pickedImage  !=null ){
+      if (pickedImage != null) {
         _image = File(pickedImage.path);
-      }else{
+      } else {
         print("No Image Selected");
       }
-
     });
-
   }
 
   get body => null; //for captured image
@@ -58,8 +54,8 @@ class _HomeState extends State<Home> {
     } else {
       print("NO any camera found");
     }
-
   }
+
   String? prediction;
 
  /* Future<String> getPrediction(File imageFile) async {
@@ -67,21 +63,19 @@ class _HomeState extends State<Home> {
       final url = Uri.parse('https://api.replicate.com/v1/predictions');
       final request = http.MultipartRequest('POST', url);
       print('Image file path: ${imageFile.path}');
-      request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+      request.files
+          .add(await http.MultipartFile.fromPath('file', imageFile.path));
       print('Request files: ${request.files}');
       final response = await request.send();
       final responseJson = jsonDecode(await response.stream.bytesToString());
       print('Response JSON: $responseJson');
       final predictionResult = responseJson['prediction'];
       return predictionResult ?? "No prediction found";
-    }
-    catch (e) {
+    } catch (e) {
       print('Error: $e');
       return "Error getting prediction";
     }
   }
-
-
 
   Future<void> predictImage() async {
     try {
@@ -97,164 +91,127 @@ class _HomeState extends State<Home> {
       print('Error: $e');
     }
   }*/
-  Future<void> predictImagecapture(File imagefile) async {
-    if (imagefile != null) {
-      final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
-      final endpoint = 'https://abhii.cognitiveservices.azure.com/';
-
-      final uri = Uri.parse(
-          '$endpoint/vision/v3.2/analyze?visualFeatures=Description');
-      final headers = {
-        'Ocp-Apim-Subscription-Key': subscriptionKey,
-        'Content-Type': 'application/octet-stream',
-      };
-
-      final imageBytes = imagefile.readAsBytesSync();
-
-      final response = await http.post(uri, headers: headers, body: imageBytes);
-      final responseBody = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        final captions = responseBody['description']['captions'];
-        for (final caption in captions) {
-          print(caption['text']);
-          setState(() {
-            prediction = caption['text'];
-          });
-        }
-      }
-    }
-  }
   Future<void> predictImage() async{
-    if(_image!=null) {
-      final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
-      final endpoint = 'https://abhii.cognitiveservices.azure.com/';
+    final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
+    final endpoint = 'https://abhii.cognitiveservices.azure.com/';
+    final imagePath = '_image';
 
-      final uri = Uri.parse(
-          '$endpoint/vision/v3.2/analyze?visualFeatures=Description');
-      final headers = {
-        'Ocp-Apim-Subscription-Key': subscriptionKey,
-        'Content-Type': 'application/octet-stream',
-      };
+    final uri = Uri.parse('$endpoint/vision/v3.2/analyze?visualFeatures=Description');
+    final headers = {
+      'Ocp-Apim-Subscription-Key': subscriptionKey,
+      'Content-Type': 'application/octet-stream',
+    };
 
-      final imageBytes = _image!.readAsBytesSync();
+    final imageBytes = File(imagePath).readAsBytesSync();
 
-      final response = await http.post(uri, headers: headers, body: imageBytes);
-      final responseBody = jsonDecode(response.body);
+    final response = await http.post(uri, headers: headers, body: imageBytes);
+    final responseBody = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
-        final captions = responseBody['description']['captions'];
-        for (final caption in captions) {
-          print(caption['text']);
-          setState(() {
-            prediction = caption['text'];
-          });
-         // Text("Caption:$prediction");
-        }
-      } else {
-        print('Error: ${response
-            .statusCode} ${responseBody['error']['message']}');
+    if (response.statusCode == 200) {
+      final captions = responseBody['description']['captions'];
+      for (final caption in captions) {
+        print(caption['text']);
+        prediction=caption;
       }
-    }
+    } else {
+      print('Error: ${response.statusCode} ${responseBody['error']['message']}');}
   }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer:MainDrawer(),
+      drawer: MainDrawer(),
       appBar: AppBar(
         title: Text("SeekAssist"),
         backgroundColor: Colors.green,
       ),
       body: Container(
           child: SingleChildScrollView(
-            child: Column(children: [
-              Container(
-                  height: 300,
-                  width: 400,
-                  child: controller == null
-                      ? Center(child: Text("Loading Camera..."))
-                      : !controller!.value.isInitialized
+        child: Column(children: [
+          Container(
+              height: 300,
+              width: 400,
+              child: controller == null
+                  ? Center(child: Text("Loading Camera..."))
+                  : !controller!.value.isInitialized
                       ? Center(
-                    child: CircularProgressIndicator(),
-                  )
+                          child: CircularProgressIndicator(),
+                        )
                       : CameraPreview(controller!)),
-
-              Container(
-                height: 100,
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(20),
-                child:ElevatedButton.icon(
-                  //image capture button
-                  onPressed: () async {
-                    try {
-                      if (controller != null) {
-                        //check if controller is not null
-                        if (controller!.value.isInitialized) {
-                          //check if controller is initialized
-                          image = await controller!.takePicture(); //capture image
-                          setState(() {
-                            //update UI
-                          });
-                          if (image != null) {
-                            await predictImagecapture(File(image!.path));
-                          } else {
-                            print('No image captured');
-                          }
-                        }
-                      }
-                    } catch (e) {
-                      print(e); //show error
+          Container(
+            height: 100,
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(20),
+            child: ElevatedButton.icon(
+              //image capture button
+              onPressed: () async {
+                try {
+                  if (controller != null) {
+                    //check if controller is not null
+                    if (controller!.value.isInitialized) {
+                      //check if controller is initialized
+                      image = await controller!.takePicture(); //capture image
+                      setState(() {
+                        //update UI
+                      });
                     }
-                  },
+                  }
+                } catch (e) {
+                  print(e); //show error
+                }
+              },
 
-
-                  icon: Icon(Icons.camera),
-                  label: Text("Capture"),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green //elevated button background color
+              icon: Icon(Icons.camera),
+              label: Text("Capture"),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green //elevated button background color
                   ),
-                ),
-              ),
-              Container(
-                child: _image == null
-                    ? Text('No Image Selected')
-                    : Image.file(_image!),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  getImager();
-                },
-                icon: Icon( Icons.photo_library,),
-                label: Text('Upload image'),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green //elevated button background color
-                ),// <-- Text
-              ),
-
-              Container(
-                //show captured image
-                padding: EdgeInsets.all(30),
-                child: image == null
-                    ? Text("No image captured")
-                    : Image.file(
-                  File(image!.path),
-                  height: 300,
-                ),
-                //display captured image
-              ),
-              ElevatedButton(
-                onPressed: predictImage,
-                child: Text('Predict Image'),
-              ),
-             prediction != null
+            ),
+          ),
+          Container(
+            child: _image == null
+                ? Text('No Image Selected')
+                : Image.file(_image!),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              getImager();
+            },
+            icon: Icon(
+              Icons.photo_library,
+            ),
+            label: Text('Upload image'),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green //elevated button background color
+                ), // <-- Text
+          ),
+          Container(
+            //show captured image
+            padding: EdgeInsets.all(30),
+            child: image == null
+                ? Text("No image captured")
+                : Image.file(
+                    File(image!.path),
+                    height: 300,
+                  ),
+            //display captured image
+          ),
+          ElevatedButton(
+            onPressed: predictImage,
+            child: Text('Predict Image'),
+          ),
+          prediction != null
               ? Text(
-               "Caption: $prediction",
-               style: TextStyle(fontSize: 18),
-              ) : Container(),
-            ]),
-          )),
+                  "Caption: $prediction",
+                  style: TextStyle(fontSize: 18),
+                )
+              : Container(),
+        ]),
+      )),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () async {}, child: Icon(Icons.mic, size: 45)),
     );
   }
 }
