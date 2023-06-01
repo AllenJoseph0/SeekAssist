@@ -1,6 +1,6 @@
 import 'package:SeekAssist/screens/help_screen.dart';
-//import 'package:SeekAssist/screens/settings_screen.dart';
-//import 'package:SeekAssist/screens/share_screen.dart';
+import 'package:SeekAssist/screens/settings_screen.dart';
+import 'package:SeekAssist/screens/share_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -31,7 +31,7 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: const Text('Settings'),
             onTap: () {
-              //Navigator.push(context,MaterialPageRoute(builder: (context) => SettingsScreen() ));
+              Navigator.push(context,MaterialPageRoute(builder: (context) => SettingsScreen() ));
 
 
               // Update the state of the app.
@@ -41,7 +41,7 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             title: const Text('Share'),
             onTap: () {
-              //Navigator.push(context,MaterialPageRoute(builder: (context) => ShareScreen() ));
+              Navigator.push(context,MaterialPageRoute(builder: (context) => ShareScreen() ));
 
               // Update the state of the app.
               // ...

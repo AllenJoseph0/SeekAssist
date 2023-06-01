@@ -60,13 +60,12 @@ class _HomeState extends State<Home> {
     }
 
   }
- String? prediction;
+  String? prediction;
 
-  /*Future<String> getPrediction(File imageFile) async {
+  Future<String> getPrediction(File imageFile) async {
     try {
-      final Uri url = Uri.parse('https://api.replicate.com/v1/predictions');
+      final url = Uri.parse('https://api.replicate.com/v1/predictions');
       final request = http.MultipartRequest('POST', url);
-      request.headers['Authorization'] = 'r8_PLxjF1nEvTaTjAoHuMgK4049NNnqsig1UbtCE';
       print('Image file path: ${imageFile.path}');
       request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
       print('Request files: ${request.files}');
@@ -74,53 +73,17 @@ class _HomeState extends State<Home> {
       final responseJson = jsonDecode(await response.stream.bytesToString());
       print('Response JSON: $responseJson');
       final predictionResult = responseJson['prediction'];
-      return predictionResult ?? "No caption generated";
+      return predictionResult ?? "No prediction found";
     }
     catch (e) {
       print('Error: $e');
       return "Error getting prediction";
     }
-  }*/
- /* Future<String> convertImageToJson(File imageFile) async {
-    try {
-      final imageBytes = await imageFile.readAsBytes();
-      final base64Image = base64Encode(imageBytes);
-      final jsonMap = {
-        'image': base64Image,
-      };
-      final jsonString = json.encode(jsonMap);
-      return jsonString;
-    } catch (e) {
-      print('Error converting image to JSON: $e');
-      return '';
-    }
-  }
-
-  Future<String> sendJSONToAPI(String jsonString) async {
-    try {
-      final apiUrl = 'https://api.replicate.com/v1/predictions'; // Replace with your API endpoint
-      final response = await http.post(Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json','Authorization': 'Token r8_PLxjF1nEvTaTjAoHuMgK4049NNnqsig1UbtCE'},
-        body: jsonString
-      );
-      if (response.statusCode == 200) {
-        final responseJson = json.decode(response.body);
-        final predictionResult = responseJson['prediction'];
-        return predictionResult ?? 'No caption generated';
-      } else {
-        print('Failed to send JSON data. Error: ${response.statusCode}');
-        return 'Error getting prediction';
-      }
-    } catch (e) {
-      print('Error sending JSON data: $e');
-      return 'Error getting prediction';
-    }
   }
 
 
 
-
-  /*Future<void> predictImage() async {
+  Future<void> predictImage() async {
     try {
       if (_image != null) {
         final predictionResult = await getPrediction(_image!);
@@ -133,53 +96,7 @@ class _HomeState extends State<Home> {
     } catch (e) {
       print('Error: $e');
     }
-  }*/
-  Future<void> predictImage() async {
-    try {
-      if (_image != null) {
-        final jsonString = await convertImageToJson(_image!);
-        final predictionResult = await sendJSONToAPI(jsonString);
-        setState(() {
-          prediction = predictionResult;
-        });
-      } else {
-        print('No image selected');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
   }
-
-*/
-Future<void> predictImage() async
-  {
-    final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
-    final endpoint = 'https://abhii.cognitiveservices.azure.com/';
-
-
-    final uri = Uri.parse('$endpoint/vision/v3.2/analyze?visualFeatures=Description');
-    final headers = {
-      'Ocp-Apim-Subscription-Key': subscriptionKey,
-      'Content-Type': 'application/octet-stream',
-    };
-
-    final imageBytes = _image!.readAsBytesSync();
-
-    final response = await http.post(uri, headers: headers, body: imageBytes);
-    final responseBody = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      final captions = responseBody['description']['captions'];
-      for (final caption in captions) {
-        print(caption['text']);
-        prediction=caption;
-
-      }
-    } else {
-      print('Error: ${response.statusCode} ${responseBody['error']['message']}');
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -234,16 +151,6 @@ Future<void> predictImage() async
                   ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: predictImage,
-                child: Text('Predict Image'),
-              ),
-              prediction != null
-                  ?Text(
-               "Caption: $prediction",
-                style: TextStyle(fontSize: 14),
-              )
-                  : Container(),
               Container(
                 child: _image == null
                     ? Text('No Image Selected')
@@ -271,8 +178,16 @@ Future<void> predictImage() async
                 ),
                 //display captured image
               ),
-
-
+              ElevatedButton(
+                onPressed: predictImage,
+                child: Text('Predict Image'),
+              ),
+              prediction != null
+                  ? Text(
+                "Caption: $prediction",
+                style: TextStyle(fontSize: 18),
+              )
+                  : Container(),
             ]),
           )),
     );
