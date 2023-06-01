@@ -5,44 +5,15 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import './main_drawer.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:speech_to_text/speech_to_text.dart';
-import 'package:alan_voice/alan_voice.dart';
-
-// String sdkKey =
-//     " 08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage";
-// @override
-// // void initState() {
-// //   super.initState();
-// //   initAlan();
-// // }
-
-// initAlan() {
-//   AlanVoice.addButton(
-//       "08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage");
-// }
+import 'package:flutter_tts/flutter_tts.dart';
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
-// void initState() {
-//   super.initState();
-//   initAlan();
-// }
-
 class _HomeState extends State<Home> {
-  // _HomeState() {
-  //   /// Init Alan Button with project key from Alan AI Studio
-  //   AlanVoice.addButton(
-  //       "08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage",
-  //       buttonAlign: AlanVoice.BUTTON_ALIGN_LEFT);
-
-  //   /// Handle commands from Alan AI Studio
-  //   AlanVoice.onCommand.add((command) {
-  //     debugPrint("got new command ${command.toString()}");
-  //   });
-  // }
+  FlutterTts flutterTts = FlutterTts();
 
   List<CameraDescription>? cameras; //list out the camera available
   CameraController? controller; //controller for camera
@@ -65,26 +36,10 @@ class _HomeState extends State<Home> {
 
   get body => null; //for captured image
 
-//   // @override
-//   String sdkKey =
-//       " 08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage";
-// // @override
-// // // void initState() {
-// // //   super.initState();
-// // //   initAlan();
-// // // }
-
-//   initAlan() {
-//     AlanVoice.addButton(
-//         "08d02464c6f0de671b6df6d9f830c5b82e956eca572e1d8b807a3e2338fdd0dc/stage");
-//   }
-
   @override
   void initState() {
     loadCamera();
     super.initState();
-    super.initState();
-    // initAlan();
   }
 
   loadCamera() async {
@@ -106,24 +61,26 @@ class _HomeState extends State<Home> {
 
   String? prediction;
 
- /* Future<String> getPrediction(File imageFile) async {
+  /* Future<String> getPrediction(File imageFile) async {
     try {
       final url = Uri.parse('https://api.replicate.com/v1/predictions');
       final request = http.MultipartRequest('POST', url);
       print('Image file path: ${imageFile.path}');
-      request.files
-          .add(await http.MultipartFile.fromPath('file', imageFile.path));
+      request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
       print('Request files: ${request.files}');
       final response = await request.send();
       final responseJson = jsonDecode(await response.stream.bytesToString());
       print('Response JSON: $responseJson');
       final predictionResult = responseJson['prediction'];
       return predictionResult ?? "No prediction found";
-    } catch (e) {
+    }
+    catch (e) {
       print('Error: $e');
       return "Error getting prediction";
     }
   }
+
+
 
   Future<void> predictImage() async {
     try {
@@ -139,35 +96,71 @@ class _HomeState extends State<Home> {
       print('Error: $e');
     }
   }*/
-  Future<void> predictImage() async{
-    final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
-    final endpoint = 'https://abhii.cognitiveservices.azure.com/';
-    final imagePath = _image;
+  Future<void> predictImagecapture(File imagefile) async {
+    if (imagefile != null) {
+      final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
+      final endpoint = 'https://abhii.cognitiveservices.azure.com/';
 
-    final uri = Uri.parse('$endpoint/vision/v3.2/analyze?visualFeatures=Description');
-    final headers = {
-      'Ocp-Apim-Subscription-Key': subscriptionKey,
-      'Content-Type': 'application/octet-stream',
-    };
+      final uri =
+          Uri.parse('$endpoint/vision/v3.2/analyze?visualFeatures=Description');
+      final headers = {
+        'Ocp-Apim-Subscription-Key': subscriptionKey,
+        'Content-Type': 'application/octet-stream',
+      };
 
-    final imageBytes = _image!.readAsBytesSync();
+      final imageBytes = imagefile.readAsBytesSync();
 
-    final response = await http.post(uri, headers: headers, body: imageBytes);
-    final responseBody = jsonDecode(response.body);
+      final response = await http.post(uri, headers: headers, body: imageBytes);
+      final responseBody = jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-      final captions = responseBody['description']['captions'];
-      for (final caption in captions) {
-        print(caption['text']);
-        setState(() {
-          prediction = caption['text'];
-        });
-        
+      if (response.statusCode == 200) {
+        final captions = responseBody['description']['captions'];
+        for (final caption in captions) {
+          final captionText = caption['text'];
+          print(caption['text']);
+          setState(() {
+            prediction = caption['text'];
+          });
+          await flutterTts.speak(captionText);
+        }
       }
-    } else {
-      print('Error: ${response.statusCode} ${responseBody['error']['message']}');}
+    }
   }
 
+  Future<void> predictImage() async {
+    if (_image != null) {
+      final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
+      final endpoint = 'https://abhii.cognitiveservices.azure.com/';
+
+      final uri =
+          Uri.parse('$endpoint/vision/v3.2/analyze?visualFeatures=Description');
+      final headers = {
+        'Ocp-Apim-Subscription-Key': subscriptionKey,
+        'Content-Type': 'application/octet-stream',
+      };
+
+      final imageBytes = _image!.readAsBytesSync();
+
+      final response = await http.post(uri, headers: headers, body: imageBytes);
+      final responseBody = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final captions = responseBody['description']['captions'];
+        for (final caption in captions) {
+          final captionText = caption['text'];
+          print(caption['text']);
+          setState(() {
+            prediction = caption['text'];
+          });
+          await flutterTts.speak(captionText);
+          // Text("Caption:$prediction");
+        }
+      } else {
+        print(
+            'Error: ${response.statusCode} ${responseBody['error']['message']}');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,6 +199,11 @@ class _HomeState extends State<Home> {
                       setState(() {
                         //update UI
                       });
+                      if (image != null) {
+                        await predictImagecapture(File(image!.path));
+                      } else {
+                        print('No image captured');
+                      }
                     }
                   }
                 } catch (e) {
@@ -261,8 +259,6 @@ class _HomeState extends State<Home> {
               : Container(),
         ]),
       )),
-     // */ floatingActionButton: FloatingActionButton(
-     //      onPressed: () async {}, child: Icon(Icons.mic, size: 45)),
     );
   }
 }
