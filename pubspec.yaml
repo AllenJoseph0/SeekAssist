@@ -36,6 +36,7 @@ dependencies:
   flutter_tts: ^3.0.0
   permission_handler: ^10.2.0
   speech_to_text: ^6.1.1
+  audioplayers:  ^4.1.0
 
 
 
