@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import './main_drawer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -60,6 +59,7 @@ class _HomeState extends State<Home> {
   }
 
   String? prediction;
+
 
   /* Future<String> getPrediction(File imageFile) async {
     try {
@@ -165,17 +165,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MainDrawer(),
-      appBar: AppBar(
-        title: Text("SeekAssist"),
-        backgroundColor: Colors.green,
-      ),
       body: Container(
           child: SingleChildScrollView(
         child: Column(children: [
           Container(
-              height: 300,
-              width: 400,
+              height: MediaQuery.of(context).size.height * 0.8, // 80% of the screen height
+              width: MediaQuery.of(context).size.width * 1, // 80% of the screen width
               child: controller == null
                   ? Center(child: Text("Loading Camera..."))
                   : !controller!.value.isInitialized
@@ -254,7 +249,7 @@ class _HomeState extends State<Home> {
           prediction != null
               ? Text(
                   "Caption: $prediction",
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 20),
                 )
               : Container(),
         ]),

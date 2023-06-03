@@ -42,30 +42,19 @@ class _SplashScreenState extends State<SplashScreen> {
           width: (MediaQuery.of(context).size.width),
           decoration: BoxDecoration(
               image: DecorationImage(
-            image: AssetImage('assets/images/bg.png'),
+            image: AssetImage('assets/images/bggreens.png'),
             fit: BoxFit.cover,
           )),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image(
-                image: AssetImage(
-                  'assets/images/logopik.png',
-                ),
-                height: 50,
-                width: 50,
-              ),
-              Text('SeekAssist',
-                  textScaleFactor: 2,
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(color: Colors.white),
-                    fontWeight: FontWeight.w500,
-                  ))
-            ],
+              // child: Text('SeekAssist',
+              //     textScaleFactor: 2,
+              //     style: GoogleFonts.openSans(
+              //       textStyle: TextStyle(color: Colors.green),
+              //       fontWeight: FontWeight.w500,
+              //     ))
+
           ),
         ),
-      ),
+
     );
   }
 }
