@@ -239,89 +239,92 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //drawer: MainDrawer(),
-      appBar: AppBar(
-        title: Text("SEEK ASSIST",textAlign: TextAlign.center),
-        centerTitle: true,
-
-        backgroundColor: Colors.green,
-      ),
       body: Container(
           child: SingleChildScrollView(
-            child: Column(children: [
-              Container(
-                  height: MediaQuery.of(context).size.height * 0.8, // 80% of the screen height
-                  width: MediaQuery.of(context).size.width * 1, // 80% of the screen width
-                  child: controller == null
-                      ? Center(child: Text("Loading Camera..."))
-                      : !controller!.value.isInitialized
-                      ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                      : CameraPreview(controller!)),
-              Container(
-                height: 100,
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(20),
-                child: ElevatedButton.icon(
-                  //image capture button
-                  onPressed: () async {
-                    try {
-                      if (controller != null) {
-                        //check if controller is not null
-                        if (controller!.value.isInitialized) {
-                          //check if controller is initialized
-                          image = await controller!.takePicture(); //capture image
-                          setState(() {
-                            //update UI
-                          });
-                          if (image != null) {
-                            await predictImagecapture(File(image!.path));
-                          } else {
-                            print('No image captured');
-                          }
-                        }
-                      }
-                    } catch (e) {
-                      print(e); //show error
-                    }
-                  },
-
-                  icon: Icon(Icons.camera),
-                  label: Text("Capture"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green, //elevated button background color
+            child: Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.80,
+                    width: MediaQuery.of(context).size.width * 1,
+                    child: Stack(
+                      children: [
+                        controller == null
+                            ? Center(child: Text("Loading Camera..."))
+                            : !controller!.value.isInitialized
+                            ? Center(child: CircularProgressIndicator())
+                            : CameraPreview(controller!),
+                        Positioned(
+                          left: 10,
+                          bottom: 20,
+                          child: GestureDetector(
+                            onTap: () {
+                              getImager();
+                            },
+                            child: Image.asset(
+                              'assets/images/add_image_.png',
+                              width: 50,
+                              height: 50,
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 20),
+                            child: GestureDetector(
+                              onTap: () async {
+                                try {
+                                  if (controller != null &&
+                                      controller!.value.isInitialized) {
+                                    image = await controller!.takePicture();
+                                    setState(() {});
+                                    if (image != null) {
+                                      await predictImagecapture(File(image!.path));
+                                    } else {
+                                      print('No image captured');
+                                    }
+                                  }
+                                } catch (e) {
+                                  print(e);
+                                }
+                              },
+                              child: Container(
+                                width: 72,
+                                height: 72,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.transparent,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 3,
+                                  ),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/shutter.png',
+                                  width: 40,
+                                  height: 40,
+                                  color: Color(0xFF085B10),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              Container(
-                child: _image == null
-                    ? Text('No Image Selected')
-                    : Image.file(_image!),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  getImager();
-                },
-                icon: Icon(
-                  Icons.photo_library,
-                ),
-                label: Text('Upload image'),
-                style:  ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green//elevated button background color
-                ), // <-- Text
-              ),
-              Container(
-                //show captured image
-                padding: EdgeInsets.all(30),
-                child: image == null
-                    ? Text("No image captured")
-                    : Image.file(
-                  File(image!.path),
-                  height: 300,
-                ),
-                //display captured image
-              ),
+
+
+                  // Container(
+              //   //show captured image
+              //   padding: EdgeInsets.all(30),
+              //   child: image == null
+              //       ? Text("No image captured")
+              //       : Image.file(
+              //     File(image!.path),
+              //     height: 300,
+              //   ),
+              //   //display captured image
+              // ),
               if(isImageselected)
                 ElevatedButton(
                   onPressed: predictImage,
