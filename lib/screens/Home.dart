@@ -262,7 +262,7 @@ class _HomeState extends State<Home> {
                             },
                             child: Image.asset(
                               'assets/images/add_image_.png',
-                              width: 48,
+                              width: 50,
                               height: 50,
                             ),
                           ),
