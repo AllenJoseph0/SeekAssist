@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
   void initState() {
     loadCamera();
     SpeechRecognition();
-   // audioCache.load('assets/soundfiles/shutter_sound.wav');
+    // audioCache.load('assets/soundfiles/shutter_sound.wav');
     super.initState();
   }
   loadCamera() async {
@@ -83,7 +83,7 @@ class _HomeState extends State<Home> {
           });
           if (image != null) {
             //audioPlayer.setVolume(1.0);
-           // audioPlayer.play(UrlSource('assets/soundfiles/shutter_sound.wav'));
+            // audioPlayer.play(UrlSource('assets/soundfiles/shutter_sound.wav'));
             await predictImagecapture(File(image!.path));
           } else {
             print('No image captured');
@@ -315,29 +315,29 @@ class _HomeState extends State<Home> {
 
 
                   // Container(
-              //   //show captured image
-              //   padding: EdgeInsets.all(30),
-              //   child: image == null
-              //       ? Text("No image captured")
-              //       : Image.file(
-              //     File(image!.path),
-              //     height: 300,
-              //   ),
-              //   //display captured image
-              // ),
-              if(isImageselected)
-                ElevatedButton(
-                  onPressed: predictImage,
-                  child: Text('Predict Image'),
-                ),
-              prediction != null
-                  ? Text(
-                "Caption: $prediction",
-                style: TextStyle(fontSize: 18),
+                  //   //show captured image
+                  //   padding: EdgeInsets.all(30),
+                  //   child: image == null
+                  //       ? Text("No image captured")
+                  //       : Image.file(
+                  //     File(image!.path),
+                  //     height: 300,
+                  //   ),
+                  //   //display captured image
+                  // ),
+                  if(isImageselected)
+                    ElevatedButton(
+                      onPressed: predictImage,
+                      child: Text('Predict Image'),
+                    ),
+                  prediction != null
+                      ? Text(
+                    "Caption: $prediction",
+                    style: TextStyle(fontSize: 18),
 
-              )
-                  : Container(),
-            ]),
+                  )
+                      : Container(),
+                ]),
           )),
     );
   }
