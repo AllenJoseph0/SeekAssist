@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_recognition_result.dart' as stt;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:audioplayers/audioplayers.dart';
 
 
 
@@ -20,7 +21,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   FlutterTts flutterTts = FlutterTts();
- // bool isImageselected=false;
+  bool isImageselected=false;
+  //AudioCache audioCache = AudioCache();
+  //AudioPlayer audioPlayer = AudioPlayer();
 
   List<CameraDescription>? cameras; //list out the camera available
   CameraController? controller; //controller for camera
@@ -36,8 +39,7 @@ class _HomeState extends State<Home> {
     setState(() {
       if (pickedImage != null) {
         _image = File(pickedImage.path);
-        //isImageselected=true;
-        predictImage();
+        isImageselected=true;
       } else {
         print("No Image Selected");
       }
@@ -50,6 +52,7 @@ class _HomeState extends State<Home> {
   void initState() {
     loadCamera();
     SpeechRecognition();
+   // audioCache.load('assets/soundfiles/shutter_sound.wav');
     super.initState();
   }
   loadCamera() async {
@@ -79,7 +82,9 @@ class _HomeState extends State<Home> {
             // Update the UI
           });
           if (image != null) {
-            predictImagecapture(File(image!.path));
+            //audioPlayer.setVolume(1.0);
+           // audioPlayer.play(UrlSource('assets/soundfiles/shutter_sound.wav'));
+            await predictImagecapture(File(image!.path));
           } else {
             print('No image captured');
           }
@@ -90,7 +95,17 @@ class _HomeState extends State<Home> {
     }
   }
 
-
+  /*void startListening() {
+    speech.listen(
+      onResult: (stt.SpeechRecognitionResult result) {
+        String spokenWords = result.recognizedWords.toLowerCase();
+        if (spokenWords.contains('capture image')) {
+          // Call the capture image function here
+          captureImage();
+        }
+      },
+    );
+  }*/
 
   void SpeechRecognition() async {
     bool available = await speech.initialize();
@@ -114,6 +129,41 @@ class _HomeState extends State<Home> {
 
   String? prediction;
 
+  /* Future<String> getPrediction(File imageFile) async {
+    try {
+      final url = Uri.parse('https://api.replicate.com/v1/predictions');
+      final request = http.MultipartRequest('POST', url);
+      print('Image file path: ${imageFile.path}');
+      request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+      print('Request files: ${request.files}');
+      final response = await request.send();
+      final responseJson = jsonDecode(await response.stream.bytesToString());
+      print('Response JSON: $responseJson');
+      final predictionResult = responseJson['prediction'];
+      return predictionResult ?? "No prediction found";
+    }
+    catch (e) {
+      print('Error: $e');
+      return "Error getting prediction";
+    }
+  }
+
+
+
+  Future<void> predictImage() async {
+    try {
+      if (_image != null) {
+        final predictionResult = await getPrediction(_image!);
+        setState(() {
+          prediction = predictionResult;
+        });
+      } else {
+        print('No image selected');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }*/
   Future<void> predictImagecapture(File imagefile) async {
     if (imagefile != null) {
       final subscriptionKey = '471b2a144cee41fe8599ad4f94a8174e';
@@ -272,11 +322,11 @@ class _HomeState extends State<Home> {
                 ),
                 //display captured image
               ),
-              // if(isImageselected)
-              //   ElevatedButton(
-              //     onPressed: predictImage,
-              //     child: Text('Predict Image'),
-              //   ),
+              if(isImageselected)
+                ElevatedButton(
+                  onPressed: predictImage,
+                  child: Text('Predict Image'),
+                ),
               prediction != null
                   ? Text(
                 "Caption: $prediction",
