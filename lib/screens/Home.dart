@@ -37,6 +37,7 @@ class _HomeState extends State<Home> {
 
 
 
+
   final picker = ImagePicker();
   stt.SpeechToText speech = stt.SpeechToText();
 
@@ -351,8 +352,12 @@ class _HomeState extends State<Home> {
                       : Container(),
                 ]),
           )),
+
+
     );
-  }
+}
+
+
 
   void switchCameras() async {
     if (cameras != null && cameras!.length > 1) {
@@ -420,7 +425,7 @@ class _HomeState extends State<Home> {
           scannedBarcode = barcodeScanResult;
         });
 
-        processScannedBarcode(barcodeScanResult);
+        processScannedBarcode(context, barcodeScanResult);
       } on PlatformException catch (e) {
         if (e.code == 'PERMISSION_NOT_GRANTED') {
           // Handle camera permission denied error
@@ -432,65 +437,41 @@ class _HomeState extends State<Home> {
       }
     }
   }
-  void processScannedBarcode(String barcode) {
-    // Example: Open a link when a specific barcode is scanned
-    if (barcode == 'YOUR_SPECIFIC_BARCODE') {
-      String url = 'https://example.com'; // Replace with your desired URL
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Scanned Barcode'),
-            content: Column(
-              children: [
-                Text('The scanned barcode is: $barcode'),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await launch(url);
-                    } catch (e) {
-                      throw 'Could not launch $url: $e';
-                    }
-                  },
-                  child: Text('Go to Link'),
-                ),
-              ],
+
+  void processScannedBarcode(BuildContext context, String barcode) {
+    // Example: Open a search in a browser with the scanned barcode
+    String searchUrl = barcode; // Replace with your desired search URL
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Scanned Barcode'),
+          content: Column(
+            children: [
+              Text('The scanned barcode is: $barcode'),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await launchUrl(Uri.parse(searchUrl));
+                  } catch (e) {
+                    throw 'Could not launch $searchUrl: $e';
+                  }
+                },
+                child: Text('Search'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      // Display a dialog with the scanned barcode
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Scanned Barcode'),
-            content: Text('The scanned barcode is: $barcode'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    // You can add more conditions to handle different barcodes if needed
+          ],
+        );
+      },
+    );
   }
-
 }
 
