@@ -36,6 +36,13 @@ dependencies:
   flutter_tts: ^3.0.0
   permission_handler: ^10.2.0
   speech_to_text: ^6.1.1
+  flutter_barcode_scanner: ^2.0.0
+  url_launcher: ^6.0.3
+  webview_flutter: ^2.0.14
+  flutter_inappwebview: ^5.0.3
+
+
+
 
 
 
@@ -82,7 +89,8 @@ flutter:
   assets:
     - assets/images/bggreens.png
     - assets/images/shutter.png
-    - assets/images/add_image_.png
+    - assets/images/add_image.png
+    - assets/images/camera_switch.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -109,3 +117,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+assets/images/flash_on:
+  png:

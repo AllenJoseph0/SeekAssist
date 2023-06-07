@@ -9,6 +9,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_recognition_result.dart' as stt;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter/services.dart' show PlatformException;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/src/legacy_api.dart';
+
 
 
 
@@ -25,6 +30,12 @@ class _HomeState extends State<Home> {
   CameraController? controller; //controller for camera
   XFile? image;
   File? _image;
+  int selectedCameraIndex = 0; // Initially select the first camera
+  FlashMode currentFlashMode = FlashMode.auto;
+  bool isBarcodeScannerActive = false;
+  String? scannedBarcode;
+
+
 
   final picker = ImagePicker();
   stt.SpeechToText speech = stt.SpeechToText();
@@ -200,19 +211,76 @@ class _HomeState extends State<Home> {
                             ? Center(child: CircularProgressIndicator())
                             : CameraPreview(controller!),
                         Positioned(
-                          left: 10,
+                          top: 40,
+                          left: 20,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                currentFlashMode = getNextFlashMode(currentFlashMode);
+                              });
+                              setFlashMode(currentFlashMode);
+                            },
+                            child: Icon(
+                              getFlashIcon(currentFlashMode),
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 40,
+                          right: 20,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isBarcodeScannerActive = !isBarcodeScannerActive;
+                              });
+                              activateBarcodeScanner();
+                              // Barcode scanner activation logic
+                            },
+                            child: Icon(
+                              isBarcodeScannerActive
+                                  ? Icons.qr_code_scanner
+                                  : Icons.qr_code,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 20,
+                          right: 20,
+                          child: GestureDetector(
+                            onTap: () {
+                              switchCameras();
+                            },
+                            child: Image.asset(
+                              'assets/images/camera_switch.png',
+                              color: Colors.white,
+                              width: 50,
+                              height: 50,
+                            ),
+                          ),
+                        ),
+
+                        Positioned(
+                          left: 20,
                           bottom: 20,
                           child: GestureDetector(
                             onTap: () {
                               getImager();
                             },
                             child: Image.asset(
-                              'assets/images/add_image_.png',
-                              width: 50,
-                              height: 50,
+                              'assets/images/add_image.png',
+                              color: Colors.white,
+                              width: 40,
+                              height: 40,
                             ),
                           ),
                         ),
+
+
+
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
@@ -235,8 +303,8 @@ class _HomeState extends State<Home> {
                                 }
                               },
                               child: Container(
-                                width: 72,
-                                height: 72,
+                                width: 70,
+                                height: 70,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Colors.transparent,
@@ -247,8 +315,6 @@ class _HomeState extends State<Home> {
                                 ),
                                 child: Image.asset(
                                   'assets/images/shutter.png',
-                                  width: 40,
-                                  height: 40,
                                   color: Color(0xFF085B10),
                                 ),
                               ),
@@ -287,4 +353,144 @@ class _HomeState extends State<Home> {
           )),
     );
   }
+
+  void switchCameras() async {
+    if (cameras != null && cameras!.length > 1) {
+      // Check if multiple cameras are available
+
+      // Release the current camera controller
+      await controller!.dispose();
+
+      // Calculate the index of the next camera
+      int nextCameraIndex = (selectedCameraIndex + 1) % cameras!.length;
+
+      // Initialize the controller with the next camera
+      controller = CameraController(cameras![nextCameraIndex], ResolutionPreset.high);
+
+      // Initialize the camera controller
+      await controller!.initialize();
+
+      // Update the selected camera index
+      selectedCameraIndex = nextCameraIndex;
+
+      // Update the UI
+      setState(() {});
+    }
+  }
+  FlashMode getNextFlashMode(FlashMode currentMode) {
+    if (currentMode == FlashMode.auto) {
+      return FlashMode.torch;
+    } else if (currentMode == FlashMode.torch) {
+      return FlashMode.off;
+    } else {
+      return FlashMode.auto;
+    }
+  }
+
+  IconData getFlashIcon(FlashMode flashMode) {
+    if (flashMode == FlashMode.auto) {
+      return Icons.flash_auto;
+    } else if (flashMode == FlashMode.torch) {
+      return Icons.flash_on;
+    } else {
+      return Icons.flash_off;
+    }
+  }
+
+  void setFlashMode(FlashMode flashMode) async {
+    if (controller != null && controller!.value.isInitialized) {
+      try {
+        await controller!.setFlashMode(flashMode);
+      } catch (e) {
+        print("Failed to set flash mode: $e");
+      }
+    }
+  }
+  void activateBarcodeScanner() async {
+    if (isBarcodeScannerActive) {
+      try {
+        String barcodeScanResult = await FlutterBarcodeScanner.scanBarcode(
+          '#FF0000', // Color for the scan view background
+          'Cancel', // Text for the cancel button
+          true, // Enable flash icon
+          ScanMode.DEFAULT, // Scan mode (DEFAULT, QR_CODE, DATA_MATRIX, etc.)
+        );
+
+        setState(() {
+          scannedBarcode = barcodeScanResult;
+        });
+
+        processScannedBarcode(barcodeScanResult);
+      } on PlatformException catch (e) {
+        if (e.code == 'PERMISSION_NOT_GRANTED') {
+          // Handle camera permission denied error
+          print('Camera permission denied');
+        } else {
+          // Handle other platform exceptions
+          print('Error: ${e.message}');
+        }
+      }
+    }
+  }
+  void processScannedBarcode(String barcode) {
+    // Example: Open a link when a specific barcode is scanned
+    if (barcode == 'YOUR_SPECIFIC_BARCODE') {
+      String url = 'https://example.com'; // Replace with your desired URL
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Scanned Barcode'),
+            content: Column(
+              children: [
+                Text('The scanned barcode is: $barcode'),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await launch(url);
+                    } catch (e) {
+                      throw 'Could not launch $url: $e';
+                    }
+                  },
+                  child: Text('Go to Link'),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Display a dialog with the scanned barcode
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Scanned Barcode'),
+            content: Text('The scanned barcode is: $barcode'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    // You can add more conditions to handle different barcodes if needed
+  }
+
 }
+
