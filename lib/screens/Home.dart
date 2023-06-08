@@ -13,6 +13,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/src/legacy_api.dart';
+import 'settings_drawer.dart';
 
 
 
@@ -88,7 +89,7 @@ class _HomeState extends State<Home> {
             // Update the UI
           });
           if (image != null) {
-             predictImagecapture(File(image!.path));
+            predictImagecapture(File(image!.path));
           } else {
             print('No image captured');
           }
@@ -193,17 +194,24 @@ class _HomeState extends State<Home> {
       });
     }
   }
+  void _navigateToSettingsPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SettingsDrawer()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SettingsDrawer(),
       body: Container(
           child: SingleChildScrollView(
             child: Column(
                 children: [
                   Container(
                     height: MediaQuery.of(context).size.height * 0.80,
-                    width: MediaQuery.of(context).size.width * 1,
+                    width: (MediaQuery.of(context).size.width),
                     child: Stack(
                       children: [
                         controller == null
@@ -282,6 +290,7 @@ class _HomeState extends State<Home> {
 
 
 
+
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
@@ -325,6 +334,22 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
+        Container(
+            child: Positioned(
+              left:10,
+              bottom:10,
+              child: GestureDetector(
+                  onTap: () {
+                    _navigateToSettingsPage;
+                  },
+                  child:Icon(
+                    Icons.settings,
+                    color: Colors.black,
+                    size: 20,
+                  )
+              ),
+            ),
+        ),
 
 
                   // Container(
@@ -355,7 +380,7 @@ class _HomeState extends State<Home> {
 
 
     );
-}
+  }
 
 
 
@@ -474,4 +499,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
