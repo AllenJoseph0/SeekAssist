@@ -195,19 +195,28 @@ class _HomeState extends State<Home> {
       });
     }
   }
-  void _navigateToSettingsPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SettingsDrawer()),
-    );
-  }
+  // void _navigateToSettingsPage() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => SettingsDrawer()),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final double cameraWidth = 400.0;
+    final double cameraHeight = 700.0;
+
     return Scaffold(
+
       // backgroundColor: Colors.white,
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Color(0xFF085B10),
+        backgroundColor: Colors.black,
+        animationCurve: Curves.easeInOut,
+        buttonBackgroundColor: Colors.white,
+        animationDuration: Duration(milliseconds: 300),
+        // backgroundColor: Color(0xFF085B10),
+        // color: Colors.white60,
 
         // key: _bottomNavigationKey,
         items: <Widget>[
@@ -221,22 +230,23 @@ class _HomeState extends State<Home> {
           // });
         },
       ),
+      body:Container(
 
-
-      body: Container(
-          child: SingleChildScrollView(
             child: Column(
                 children: [
                   Container(
-                    height:(MediaQuery.of(context).size.height * 0.8),
-                    width: (MediaQuery.of(context).size.width* 1),
+                    width: cameraWidth,
+                    height: cameraHeight,
                     child: Stack(
                       children: [
-                        controller == null
-                            ? Center(child: Text("Loading Camera..."))
-                            : !controller!.value.isInitialized
-                            ? Center(child: CircularProgressIndicator())
-                            : CameraPreview(controller!),
+                        // Camera preview widget
+                        Positioned.fill(
+                          child: AspectRatio(
+                            aspectRatio: controller!.value.aspectRatio,
+                            child: CameraPreview(controller!),
+                          ),
+                        ),
+
                         Positioned(
                           top: 40,
                           left: 20,
@@ -395,10 +405,7 @@ class _HomeState extends State<Home> {
                   )
                       : Container(),
                 ]),
-          ))
-      ,
-
-
+          ),
     );
   }
 
