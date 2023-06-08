@@ -40,7 +40,7 @@ dependencies:
   url_launcher: ^6.0.3
   webview_flutter: ^2.0.14
   flutter_inappwebview: ^5.0.3
-
+  curved_navigation_bar: ^1.0.3
 
 
 

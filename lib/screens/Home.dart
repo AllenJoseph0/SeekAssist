@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -204,14 +205,31 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SettingsDrawer(),
+      // backgroundColor: Colors.white,
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Color(0xFF085B10),
+
+        // key: _bottomNavigationKey,
+        items: <Widget>[
+          Icon(Icons.settings, size: 30),
+          Icon(Icons.home, size: 30),
+          Icon(Icons.person, size: 30),
+        ],
+        onTap: (index) {
+          // setState(() {
+          //   _page = index;
+          // });
+        },
+      ),
+
+
       body: Container(
           child: SingleChildScrollView(
             child: Column(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.80,
-                    width: (MediaQuery.of(context).size.width),
+                    height:(MediaQuery.of(context).size.height * 0.8),
+                    width: (MediaQuery.of(context).size.width* 1),
                     child: Stack(
                       children: [
                         controller == null
@@ -334,22 +352,23 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-        Container(
-            child: Positioned(
-              left:10,
-              bottom:10,
-              child: GestureDetector(
-                  onTap: () {
-                    _navigateToSettingsPage;
-                  },
-                  child:Icon(
-                    Icons.settings,
-                    color: Colors.black,
-                    size: 20,
-                  )
-              ),
-            ),
-        ),
+                  // Align(
+                  //   alignment: Alignment.bottomLeft,
+                  //   child: Container(
+                  //     margin: EdgeInsets.only(left: 10, bottom: 10),
+                  //     child: GestureDetector(
+                  //       onTap: () {
+                  //         _navigateToSettingsPage(); // Add parentheses here
+                  //       },
+                  //       child: Icon(
+                  //         Icons.settings,
+                  //         color: Colors.black,
+                  //         size: 50,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
 
 
                   // Container(
@@ -363,7 +382,7 @@ class _HomeState extends State<Home> {
                   //   ),
                   //   //display captured image
                   // ),
-                  // /if(isImageselected)
+                  // if(isImageselected)
                   //   ElevatedButton(
                   //     onPressed: predictImage,
                   //     child: Text('Predict Image'),
@@ -376,7 +395,8 @@ class _HomeState extends State<Home> {
                   )
                       : Container(),
                 ]),
-          )),
+          ))
+      ,
 
 
     );
