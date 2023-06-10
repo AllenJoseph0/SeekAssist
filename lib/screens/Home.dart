@@ -15,6 +15,8 @@ import 'package:flutter/services.dart' show PlatformException;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/src/legacy_api.dart';
 import 'settings_drawer.dart';
+import 'dart:ui' as ui;
+
 
 
 
@@ -272,9 +274,15 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final double cameraWidth = 400.0;
-    final double cameraHeight = 725.0;
+    double cameraWidthPercent = 1; // 80% of the screen width
+    double cameraHeightPercent = 0.9061; // 80% of the screen height
 
+    ui.Size screenSize = ui.window.physicalSize / ui.window.devicePixelRatio;
+    double screenWidth = screenSize.width;
+    double screenHeight = screenSize.height;
+
+    double cameraWidth = screenWidth * cameraWidthPercent;
+    double cameraHeight = screenHeight * cameraHeightPercent;
     return Scaffold(
 
       // backgroundColor: Colors.white,
@@ -284,7 +292,7 @@ class _HomeState extends State<Home> {
         buttonBackgroundColor: Colors.white,
         animationDuration: Duration(milliseconds: 300),
         // backgroundColor: Color(0xFF085B10),
-        // color: Colors.white60,
+        color: Colors.white60,
 
         // key: _bottomNavigationKey,
         items: <Widget>[
