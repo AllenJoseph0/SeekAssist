@@ -24,6 +24,35 @@ class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
+class ImageDetailPage extends StatelessWidget {
+  final String imagePath;
+  final String caption;
+
+  ImageDetailPage({required this.imagePath, required this.caption});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+              child: Align(
+                alignment: Alignment.center,
+                child: Image.file(File(imagePath)) ,
+              )
+          ),
+          SizedBox(height: 20),
+          Text (
+            caption,
+            style: TextStyle(fontSize: 18),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 class _HomeState extends State<Home> {
   FlutterTts flutterTts = FlutterTts();
@@ -42,12 +71,26 @@ class _HomeState extends State<Home> {
 
   final picker = ImagePicker();
   stt.SpeechToText speech = stt.SpeechToText();
+  // Inside the method where you capture/select an image and have the image path and caption available
+  void navigateToImageDetailPage(BuildContext context, String imagePath, String caption) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ImageDetailPage(imagePath: imagePath, caption: caption),
+      ),
+    );
+  }
+
 
   Future getImager() async {
     final pickedImage = await picker.getImage(source: ImageSource.gallery);
     setState(() {
       if (pickedImage != null) {
+         flutterTts.speak('image uploaded');
+
         _image = File(pickedImage.path);
+        // Inside a button onPressed or any other event handler
+       // navigateToImageDetailPage(context,pickedImage.path,'');
         predictImage();
       } else {
         print("No Image Selected");
@@ -90,6 +133,8 @@ class _HomeState extends State<Home> {
             // Update the UI
           });
           if (image != null) {
+            await flutterTts.speak('image captured');
+            navigateToImageDetailPage(context,image!.path,'');
             predictImagecapture(File(image!.path));
           } else {
             print('No image captured');
@@ -114,11 +159,37 @@ class _HomeState extends State<Home> {
           }
         },
       );
-      Timer(Duration(seconds: 10), ()
-      {
-        speech.stop();
+    } else {
+      print('Speech recognition is not available');
+      return;
+    }
 
-      });
+    // Add a stop signal to terminate speech recognition
+    bool stopSignal = false;
+
+    // Start a continuous loop for speech recognition
+    while (!stopSignal) {
+      // Wait for 1 second before starting the next speech recognition session
+      await Future.delayed(Duration(seconds: 1));
+
+      // Check if speech recognition is already listening
+      if (!speech.isListening) {
+        // Check if the stop signal was received during the delay
+        if (stopSignal) {
+          break; // Exit the loop if stop signal is received
+        }
+
+        // Start listening for speech recognition
+        speech.listen(
+          onResult: (stt.SpeechRecognitionResult result) {
+            String spokenWords = result.recognizedWords.toLowerCase();
+            if (spokenWords.contains('capture image')) {
+              // Call the capture image function here
+              captureImage();
+            }
+          },
+        );
+      }
     }
   }
 
@@ -149,12 +220,11 @@ class _HomeState extends State<Home> {
           setState(() {
             prediction = caption['text'];
           });
+          navigateToImageDetailPage(context,imagefile.path,'$prediction');
           await flutterTts.speak(captionText);
         }
       }
-      Timer(Duration(seconds: 5), () {
-        SpeechRecognition();
-      });
+
     }
   }
 
@@ -183,6 +253,7 @@ class _HomeState extends State<Home> {
           setState(() {
             prediction = caption['text'];
           });
+          navigateToImageDetailPage(context,_image!.path,'$prediction');
           await flutterTts.speak(captionText);
           // Text("Caption:$prediction");
         }
@@ -190,9 +261,6 @@ class _HomeState extends State<Home> {
         print(
             'Error: ${response.statusCode} ${responseBody['error']['message']}');
       }
-      Timer(Duration(seconds: 5), () {
-        SpeechRecognition();
-      });
     }
   }
   void _navigateToSettingsPage() {
@@ -216,6 +284,15 @@ class _HomeState extends State<Home> {
           Icon(Icons.person, size: 30),
         ],
         onTap: (index) {
+          if (index == 0) {
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return SettingsDrawer(); // Replace with your settings drawer widget
+              },
+            );
+          }
+
           // setState(() {
           //   _page = index;
           // });
@@ -321,6 +398,8 @@ class _HomeState extends State<Home> {
                                     image = await controller!.takePicture();
                                     setState(() {});
                                     if (image != null) {
+                                      await flutterTts.speak('image captured');
+                                      navigateToImageDetailPage(context,image!.path,'');
                                       await predictImagecapture(File(image!.path));
                                     } else {
                                       print('No image captured');
@@ -387,13 +466,13 @@ class _HomeState extends State<Home> {
                   //     onPressed: predictImage,
                   //     child: Text('Predict Image'),
                   //   ),
-                  prediction != null
-                      ? Text(
-                    "Caption: $prediction",
-                    style: TextStyle(fontSize: 18),
-
-                  )
-                      : Container(),
+                  // prediction != null
+                  //     ? Text(
+                  //   "Caption: $prediction",
+                  //   style: TextStyle(fontSize: 18),
+                  //
+                  // )
+                  //: Container(),
                 ]),
           ))
       ,
