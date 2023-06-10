@@ -16,10 +16,6 @@ import 'settings_drawer.dart';
 import 'dart:ui' as ui;
 
 
-
-
-
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -53,7 +49,6 @@ class ImageDetailPage extends StatelessWidget {
   }
 }
 
-
 class _HomeState extends State<Home> {
   FlutterTts flutterTts = FlutterTts();
 
@@ -65,8 +60,6 @@ class _HomeState extends State<Home> {
   FlashMode currentFlashMode = FlashMode.auto;
   bool isBarcodeScannerActive = false;
   String? scannedBarcode;
-
-
 
 
   final picker = ImagePicker();
@@ -81,14 +74,12 @@ class _HomeState extends State<Home> {
     );
   }
 
-
   Future getImager() async {
     final pickedImage = await picker.getImage(source: ImageSource.gallery);
     setState(() {
       if (pickedImage != null) {
          flutterTts.speak('image uploaded');
-
-        _image = File(pickedImage.path);
+         _image = File(pickedImage.path);
         // Inside a button onPressed or any other event handler
        // navigateToImageDetailPage(context,pickedImage.path,'');
         predictImage();
@@ -111,7 +102,6 @@ class _HomeState extends State<Home> {
     if (cameras != null) {
       controller = CameraController(cameras![0],ResolutionPreset.high);
       //cameras[0] = first camera, change to 1 to another camera
-
       controller!.initialize().then((_) {
         if (!mounted) {
           return;
@@ -122,6 +112,7 @@ class _HomeState extends State<Home> {
       print("NO any camera found");
     }
   }
+
   Future<void> captureImage() async {
     try {
       if (controller != null) {
@@ -145,7 +136,6 @@ class _HomeState extends State<Home> {
       print(e); // Show error
     }
   }
-
 
   void SpeechRecognition() async {
     bool available = await speech.initialize();
@@ -263,12 +253,6 @@ class _HomeState extends State<Home> {
       }
     }
   }
-  // void _navigateToSettingsPage() {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => SettingsDrawer()),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -310,7 +294,6 @@ class _HomeState extends State<Home> {
           }
         },
       ),
-
 
       body:Container(
             child: Column(
