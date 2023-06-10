@@ -56,21 +56,22 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
               ),
             ),
           ),
-          ListTile(
-        title: Text('Caption audio'),
-        // onTap: toggleCaptionAudio, // Update the onTap callback
-        // trailing: Switch(
-        // value: isCaptionAudioEnabled,
-        // onChanged: (value) {
-        // toggleCaptionAudio(); // Call the toggleCaptionAudio method when the switch is toggled
-        // },
-        ),
-          ListTile(
-            title: Text('Setting 2'),
-            onTap: () {
-              // Handle setting 2 tap
-            },
-          ),
+        //   ListTile(
+        // title: Text('Caption audio'),
+        // // onTap: toggleCaptionAudio, // Update the onTap callback
+        // // trailing: Switch(
+        // // value: isCaptionAudioEnabled,
+        // // onChanged: (value) {
+        // // toggleCaptionAudio(); // Call the toggleCaptionAudio method when the switch is toggled
+        // // },
+        // ),
+        //   ListTile(
+        //     title: Text('Setting'),
+        //     onTap: () {
+        //
+        //       // Handle setting 2 tap
+        //     },
+        //   ),
           // Add more ListTile widgets for additional settings
         ],
       ),

@@ -301,19 +301,17 @@ class _HomeState extends State<Home> {
         ],
         onTap: (index) {
           if (index == 0) {
-            showModalBottomSheet(
-              context: context,
-              builder: (BuildContext context) {
-                return SettingsDrawer(); // Replace with your settings drawer widget
-              },
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingsDrawer(),
+              ),
             );
           }
-
-          // setState(() {
-          //   _page = index;
-          // });
         },
       ),
+
+
       body:Container(
             child: Column(
                 children: [
@@ -348,6 +346,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
+
                         Positioned(
                           top: 40,
                           right: 20,
@@ -368,6 +367,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
+
                         Positioned(
                           bottom: 20,
                           right: 20,
@@ -400,9 +400,6 @@ class _HomeState extends State<Home> {
                           ),
                         ),
 
-
-
-
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
@@ -426,6 +423,7 @@ class _HomeState extends State<Home> {
                                   print(e);
                                 }
                               },
+
                               child: Container(
                                 width: 70,
                                 height: 70,
@@ -465,8 +463,6 @@ class _HomeState extends State<Home> {
                   //     ),
                   //   ),
                   // ),
-
-
 
                   // Container(
                   //   //show captured image
