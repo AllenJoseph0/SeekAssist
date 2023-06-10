@@ -273,7 +273,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final double cameraWidth = 400.0;
-    final double cameraHeight = 700.0;
+    final double cameraHeight = 725.0;
 
     return Scaffold(
 
