@@ -317,7 +317,8 @@ class _HomeState extends State<Home> {
       body:Container(
             child: Column(
                 children: [
-                  Container(
+            Expanded(
+            child: Container(
                     width: cameraWidth,
                     height: cameraHeight,
                     child: controller != null ? Stack(
@@ -447,6 +448,7 @@ class _HomeState extends State<Home> {
                       ],
                     ): Container(),
                   ),
+            ),
                   // Align(
                   //   alignment: Alignment.bottomLeft,
                   //   child: Container(
