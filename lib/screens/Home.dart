@@ -36,16 +36,21 @@ class ImageDetailPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-              child: Align(
+               Align(
                 alignment: Alignment.center,
-                child: Image.file(File(imagePath)) ,
-              )
+                child:Container(
+                  width: MediaQuery.of(context).size.width * 0.8, // Adjust the width as needed
+                  height: MediaQuery.of(context).size.height * 0.5, // Adjust the height as needed
+                  child: Image.file(File(imagePath),
+                      fit:BoxFit.contain,
+                  ),
+
+              ),
           ),
           SizedBox(height: 20),
           Text (
             caption,
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 22),
           ),
         ],
       ),
@@ -86,11 +91,11 @@ class _HomeState extends State<Home> {
     final pickedImage = await picker.getImage(source: ImageSource.gallery);
     setState(() {
       if (pickedImage != null) {
-         flutterTts.speak('image uploaded');
+        flutterTts.speak('image uploaded');
 
         _image = File(pickedImage.path);
         // Inside a button onPressed or any other event handler
-       // navigateToImageDetailPage(context,pickedImage.path,'');
+        // navigateToImageDetailPage(context,pickedImage.path,'');
         predictImage();
       } else {
         print("No Image Selected");
@@ -315,182 +320,182 @@ class _HomeState extends State<Home> {
         },
       ),
       body:Container(
-            child: Column(
-                children: [
-                  Container(
-                    width: cameraWidth,
-                    height: cameraHeight,
-                    child: controller != null ? Stack(
-                      children: [
-                        // Camera preview widget
-                        Positioned.fill(
-                          child: AspectRatio(
-                            aspectRatio: controller!.value.aspectRatio,
-                            child: CameraPreview(controller!),
-                          ),
+        child: Column(
+            children: [
+              Container(
+                width: cameraWidth,
+                height: cameraHeight,
+                child: controller != null ? Stack(
+                  children: [
+                    // Camera preview widget
+                    Positioned.fill(
+                      child: AspectRatio(
+                        aspectRatio: controller!.value.aspectRatio,
+                        child: CameraPreview(controller!),
+                      ),
+                    ),
+
+                    Positioned(
+                      top: 40,
+                      left: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            currentFlashMode = getNextFlashMode(currentFlashMode);
+                          });
+                          setFlashMode(currentFlashMode);
+                        },
+                        child: Icon(
+                          getFlashIcon(currentFlashMode),
+                          color: Colors.white,
+                          size: 30,
                         ),
-
-                        Positioned(
-                          top: 40,
-                          left: 20,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                currentFlashMode = getNextFlashMode(currentFlashMode);
-                              });
-                              setFlashMode(currentFlashMode);
-                            },
-                            child: Icon(
-                              getFlashIcon(currentFlashMode),
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 40,
+                      right: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isBarcodeScannerActive = !isBarcodeScannerActive;
+                          });
+                          activateBarcodeScanner();
+                          // Barcode scanner activation logic
+                        },
+                        child: Icon(
+                          isBarcodeScannerActive
+                              ? Icons.qr_code_scanner
+                              : Icons.qr_code,
+                          color: Colors.white,
+                          size: 30,
                         ),
-                        Positioned(
-                          top: 40,
-                          right: 20,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isBarcodeScannerActive = !isBarcodeScannerActive;
-                              });
-                              activateBarcodeScanner();
-                              // Barcode scanner activation logic
-                            },
-                            child: Icon(
-                              isBarcodeScannerActive
-                                  ? Icons.qr_code_scanner
-                                  : Icons.qr_code,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 20,
+                      right: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          switchCameras();
+                        },
+                        child: Image.asset(
+                          'assets/images/camera_switch.png',
+                          color: Colors.white,
+                          width: 50,
+                          height: 50,
                         ),
-                        Positioned(
-                          bottom: 20,
-                          right: 20,
-                          child: GestureDetector(
-                            onTap: () {
-                              switchCameras();
-                            },
-                            child: Image.asset(
-                              'assets/images/camera_switch.png',
-                              color: Colors.white,
-                              width: 50,
-                              height: 50,
-                            ),
-                          ),
+                      ),
+                    ),
+
+                    Positioned(
+                      left: 20,
+                      bottom: 20,
+                      child: GestureDetector(
+                        onTap: () {
+                          getImager();
+                        },
+                        child: Image.asset(
+                          'assets/images/add_image.png',
+                          color: Colors.white,
+                          width: 40,
+                          height: 40,
                         ),
-
-                        Positioned(
-                          left: 20,
-                          bottom: 20,
-                          child: GestureDetector(
-                            onTap: () {
-                              getImager();
-                            },
-                            child: Image.asset(
-                              'assets/images/add_image.png',
-                              color: Colors.white,
-                              width: 40,
-                              height: 40,
-                            ),
-                          ),
-                        ),
+                      ),
+                    ),
 
 
 
 
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 20),
-                            child: GestureDetector(
-                              onTap: () async {
-                                try {
-                                  if (controller != null &&
-                                      controller!.value.isInitialized) {
-                                    image = await controller!.takePicture();
-                                    setState(() {});
-                                    if (image != null) {
-                                      await flutterTts.speak('image captured');
-                                      navigateToImageDetailPage(context,image!.path,'');
-                                      await predictImagecapture(File(image!.path));
-                                    } else {
-                                      print('No image captured');
-                                    }
-                                  }
-                                } catch (e) {
-                                  print(e);
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 20),
+                        child: GestureDetector(
+                          onTap: () async {
+                            try {
+                              if (controller != null &&
+                                  controller!.value.isInitialized) {
+                                image = await controller!.takePicture();
+                                setState(() {});
+                                if (image != null) {
+                                  await flutterTts.speak('image captured');
+                                  navigateToImageDetailPage(context,image!.path,'');
+                                  await predictImagecapture(File(image!.path));
+                                } else {
+                                  print('No image captured');
                                 }
-                              },
-                              child: Container(
-                                width: 70,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.transparent,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 3,
-                                  ),
-                                ),
-                                child: Image.asset(
-                                  'assets/images/shutter.png',
-                                  color: Color(0xFF085B10),
-                                ),
+                              }
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                          child: Container(
+                            width: 70,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.transparent,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 3,
                               ),
                             ),
+                            child: Image.asset(
+                              'assets/images/shutter.png',
+                              color: Color(0xFF085B10),
+                            ),
                           ),
                         ),
-                      ],
-                    ): Container(),
-                  ),
-                  // Align(
-                  //   alignment: Alignment.bottomLeft,
-                  //   child: Container(
-                  //     margin: EdgeInsets.only(left: 10, bottom: 10),
-                  //     child: GestureDetector(
-                  //       onTap: () {
-                  //         _navigateToSettingsPage(); // Add parentheses here
-                  //       },
-                  //       child: Icon(
-                  //         Icons.settings,
-                  //         color: Colors.black,
-                  //         size: 50,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                      ),
+                    ),
+                  ],
+                ): Container(),
+              ),
+              // Align(
+              //   alignment: Alignment.bottomLeft,
+              //   child: Container(
+              //     margin: EdgeInsets.only(left: 10, bottom: 10),
+              //     child: GestureDetector(
+              //       onTap: () {
+              //         _navigateToSettingsPage(); // Add parentheses here
+              //       },
+              //       child: Icon(
+              //         Icons.settings,
+              //         color: Colors.black,
+              //         size: 50,
+              //       ),
+              //     ),
+              //   ),
+              // ),
 
 
 
-                  // Container(
-                  //   //show captured image
-                  //   padding: EdgeInsets.all(30),
-                  //   child: image == null
-                  //       ? Text("No image captured")
-                  //       : Image.file(
-                  //     File(image!.path),
-                  //     height: 300,
-                  //   ),
-                  //   //display captured image
-                  // ),
-                  // if(isImageselected)
-                  //   ElevatedButton(
-                  //     onPressed: predictImage,
-                  //     child: Text('Predict Image'),
-                  //   ),
-                  // prediction != null
-                  //     ? Text(
-                  //   "Caption: $prediction",
-                  //   style: TextStyle(fontSize: 18),
-                  //
-                  // )
-                  //: Container(),
-                ]),
-          ),
+              // Container(
+              //   //show captured image
+              //   padding: EdgeInsets.all(30),
+              //   child: image == null
+              //       ? Text("No image captured")
+              //       : Image.file(
+              //     File(image!.path),
+              //     height: 300,
+              //   ),
+              //   //display captured image
+              // ),
+              // if(isImageselected)
+              //   ElevatedButton(
+              //     onPressed: predictImage,
+              //     child: Text('Predict Image'),
+              //   ),
+              // prediction != null
+              //     ? Text(
+              //   "Caption: $prediction",
+              //   style: TextStyle(fontSize: 18),
+              //
+              // )
+              //: Container(),
+            ]),
+      ),
     );
   }
 
