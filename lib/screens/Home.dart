@@ -315,7 +315,8 @@ class _HomeState extends State<Home> {
       body:Container(
             child: Column(
                 children: [
-                  Container(
+            Expanded(
+            child: Container(
                     width: cameraWidth,
                     height: cameraHeight,
                     child: controller != null ? Stack(
@@ -445,48 +446,10 @@ class _HomeState extends State<Home> {
                       ],
                     ): Container(),
                   ),
-                  // Align(
-                  //   alignment: Alignment.bottomLeft,
-                  //   child: Container(
-                  //     margin: EdgeInsets.only(left: 10, bottom: 10),
-                  //     child: GestureDetector(
-                  //       onTap: () {
-                  //         _navigateToSettingsPage(); // Add parentheses here
-                  //       },
-                  //       child: Icon(
-                  //         Icons.settings,
-                  //         color: Colors.black,
-                  //         size: 50,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-
-                  // Container(
-                  //   //show captured image
-                  //   padding: EdgeInsets.all(30),
-                  //   child: image == null
-                  //       ? Text("No image captured")
-                  //       : Image.file(
-                  //     File(image!.path),
-                  //     height: 300,
-                  //   ),
-                  //   //display captured image
-                  // ),
-                  // if(isImageselected)
-                  //   ElevatedButton(
-                  //     onPressed: predictImage,
-                  //     child: Text('Predict Image'),
-                  //   ),
-                  // prediction != null
-                  //     ? Text(
-                  //   "Caption: $prediction",
-                  //   style: TextStyle(fontSize: 18),
-                  //
-                  // )
-                  //: Container(),
-                ]),
-          ),
+            ),
+                ],
+            ),
+      ),
     );
   }
 
