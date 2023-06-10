@@ -5,7 +5,6 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-//import './main_drawer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_recognition_result.dart' as stt;
@@ -13,7 +12,6 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/src/legacy_api.dart';
 import 'settings_drawer.dart';
 import 'dart:ui' as ui;
 
@@ -274,8 +272,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    double cameraWidthPercent = 1; // 80% of the screen width
-    double cameraHeightPercent = 0.9061; // 80% of the screen height
+    double cameraWidthPercent = 1; // 100% of the screen width
+    double cameraHeightPercent = 0.9; // 90% of the screen height
 
     ui.Size screenSize = ui.window.physicalSize / ui.window.devicePixelRatio;
     double screenWidth = screenSize.width;
@@ -283,9 +281,10 @@ class _HomeState extends State<Home> {
 
     double cameraWidth = screenWidth * cameraWidthPercent;
     double cameraHeight = screenHeight * cameraHeightPercent;
+
     return Scaffold(
 
-      // backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.black,
         animationCurve: Curves.easeInOut,
@@ -316,13 +315,12 @@ class _HomeState extends State<Home> {
         },
       ),
       body:Container(
-
             child: Column(
                 children: [
                   Container(
                     width: cameraWidth,
                     height: cameraHeight,
-                    child: Stack(
+                    child: controller != null ? Stack(
                       children: [
                         // Camera preview widget
                         Positioned.fill(
@@ -447,7 +445,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ],
-                    ),
+                    ): Container(),
                   ),
                   // Align(
                   //   alignment: Alignment.bottomLeft,
