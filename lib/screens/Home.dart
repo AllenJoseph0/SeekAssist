@@ -32,17 +32,21 @@ class ImageDetailPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-              child: Align(
+              Align(
                 alignment: Alignment.center,
-                child: Image.file(File(imagePath)) ,
-              )
-          ),
-          SizedBox(height: 20),
-          Text (
-            caption,
-            style: TextStyle(fontSize: 18),
-          ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.8, // Adjust the width as needed
+                  height: MediaQuery.of(context).size.height * 0.6, // Adjust the height as needed
+                  child: Image.file(File(imagePath),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                caption,
+                style: TextStyle(fontSize: 22),
+              ),
         ],
       ),
     );
@@ -81,7 +85,7 @@ class _HomeState extends State<Home> {
          flutterTts.speak('image uploaded');
          _image = File(pickedImage.path);
         // Inside a button onPressed or any other event handler
-       // navigateToImageDetailPage(context,pickedImage.path,'');
+       navigateToImageDetailPage(context,pickedImage.path,'');
         predictImage();
       } else {
         print("No Image Selected");
