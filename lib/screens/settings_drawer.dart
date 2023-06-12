@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-
 class SettingsDrawer extends StatefulWidget {
   @override
   _SettingsDrawerState createState() => _SettingsDrawerState();
-
 }
-
-
 
 class _SettingsDrawerState extends State<SettingsDrawer> {
   // AudioPlayer audioPlayer = AudioPlayer();
@@ -56,22 +52,22 @@ class _SettingsDrawerState extends State<SettingsDrawer> {
               ),
             ),
           ),
-        //   ListTile(
-        // title: Text('Caption audio'),
-        // // onTap: toggleCaptionAudio, // Update the onTap callback
-        // // trailing: Switch(
-        // // value: isCaptionAudioEnabled,
-        // // onChanged: (value) {
-        // // toggleCaptionAudio(); // Call the toggleCaptionAudio method when the switch is toggled
-        // // },
-        // ),
-        //   ListTile(
-        //     title: Text('Setting'),
-        //     onTap: () {
-        //
-        //       // Handle setting 2 tap
-        //     },
-        //   ),
+          //   ListTile(
+          // title: Text('Caption audio'),
+          // // onTap: toggleCaptionAudio, // Update the onTap callback
+          // // trailing: Switch(
+          // // value: isCaptionAudioEnabled,
+          // // onChanged: (value) {
+          // // toggleCaptionAudio(); // Call the toggleCaptionAudio method when the switch is toggled
+          // // },
+          // ),
+          //   ListTile(
+          //     title: Text('Setting'),
+          //     onTap: () {
+          //
+          //       // Handle setting 2 tap
+          //     },
+          //   ),
           // Add more ListTile widgets for additional settings
         ],
       ),

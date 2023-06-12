@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
-// import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:camera/camera.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:url_launcher/url_launcher.dart';
 import 'settings_drawer.dart';
+import 'person_page.dart';
 import 'dart:ui' as ui;
 
 class Home extends StatefulWidget {
@@ -297,6 +297,13 @@ class _HomeState extends State<Home> {
               context,
               MaterialPageRoute(
                 builder: (context) => SettingsDrawer(),
+              ),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PersonPage(),
               ),
             );
           }
