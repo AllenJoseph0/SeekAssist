@@ -38,23 +38,21 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: SizedBox.expand(
         child: Container(
-          height: (MediaQuery.of(context).size.height),
-          width: (MediaQuery.of(context).size.width),
+          height: (MediaQuery.of(context).size.height * 0.15),
+          width: (MediaQuery.of(context).size.width * 0.15),
           decoration: BoxDecoration(
               image: DecorationImage(
             image: AssetImage('assets/images/bggreens.png'),
             fit: BoxFit.cover,
           )),
-              // child: Text('SeekAssist',
-              //     textScaleFactor: 2,
-              //     style: GoogleFonts.openSans(
-              //       textStyle: TextStyle(color: Colors.green),
-              //       fontWeight: FontWeight.w500,
-              //     ))
-
-          ),
+          // child: Text('SeekAssist',
+          //     textScaleFactor: 2,
+          //     style: GoogleFonts.openSans(
+          //       textStyle: TextStyle(color: Colors.green),
+          //       fontWeight: FontWeight.w500,
+          //     ))
         ),
-
+      ),
     );
   }
 }
