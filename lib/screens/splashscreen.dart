@@ -38,8 +38,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: SizedBox.expand(
         child: Container(
-          height: (MediaQuery.of(context).size.height * 0.15),
-          width: (MediaQuery.of(context).size.width * 0.15),
+          height: (MediaQuery.of(context).size.height * 0.33),
+          width: (MediaQuery.of(context).size.width * 0.33),
           decoration: BoxDecoration(
               image: DecorationImage(
             image: AssetImage('assets/images/bggreens.png'),
