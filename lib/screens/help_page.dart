@@ -29,14 +29,14 @@ class helppage extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Text(
-              'Here you can find useful information and instructions on how to use our app.',
+              'Here you can find useful information and instructions on how to use our app.\n To capture -Click the shutter Button\n  \t \t  \t \t  \t  \t \t   -  Give voice command(capture image)  \n  \n Upload image  -Click upload button ',
               style: TextStyle(
                 fontSize: 18,
               ),
             ),
             SizedBox(height: 16),
             Text(
-              'If you have any questions or need further assistance, please feel free to contact our support team.',
+              'If you have any questions or need further assistance, please feel free to contact our support team. \n Annu Mary Abraham \n annukba@gmail.com ',
               style: TextStyle(
                 fontSize: 18,
               ),
